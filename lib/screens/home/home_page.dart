@@ -5,6 +5,7 @@ import 'package:ask_anonymous/screens/auth/register_login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:share/share.dart';
 
 import '../../consts.dart';
 import '../ask_screen.dart';
@@ -42,7 +43,14 @@ class _HomePageState extends State<HomePage> {
                         Icons.share,
                         color: maincolor,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        final RenderBox? box =
+                            context.findRenderObject() as RenderBox;
+                        Share.share('https://www.google.com/',
+                            subject: 'Copy Link ',
+                            sharePositionOrigin:
+                                box!.localToGlobal(Offset.zero) & box.size);
+                      },
                     ),
                   ],
                 ),
