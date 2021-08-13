@@ -11,7 +11,7 @@ class SplashScreenfake extends StatefulWidget {
 }
 
 class _SplashScreenfakeState extends State<SplashScreenfake> {
-  @override
+  
   @override
   void initState() {
     Future.delayed(Duration(milliseconds: 3500), () {

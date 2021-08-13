@@ -1,8 +1,12 @@
+import 'package:ask_anonymous/provider/authProvider/register_loginProvider.dart';
 import 'package:ask_anonymous/screens/auth/confirmcode.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 import '../../consts.dart';
+import '../../myToast.dart';
 
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({Key? key}) : super(key: key);
@@ -12,10 +16,11 @@ class ForgetPassword extends StatefulWidget {
 }
 
 class _ForgetPasswordState extends State<ForgetPassword> {
+  TextEditingController _email = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -28,16 +33,20 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: TextFormField(
+                controller: _email,
                 validator: (value) {
                   if (value.toString().isEmpty) {
-                    return 'المحتوي مطلوب';
+                    return 'برجاء ادخال البريد الإلكتروني';
+                  }
+                  if (!RegExp(
+                          r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+                      .hasMatch(_email.text)) {
+                    return 'البريد الإلكتروني غير صالح';
                   }
                 },
-                // controller: _question,
                 keyboardType: TextInputType.emailAddress,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 decoration: InputDecoration(
-                  // prefixIcon:
-                  //     ImageIcon(AssetImage('assets/icons/question (7).png')),
                   border: new OutlineInputBorder(
                       borderRadius: const BorderRadius.all(
                         const Radius.circular(20.0),
@@ -47,7 +56,6 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                       )),
                   fillColor: Colors.grey[200],
                   filled: true,
-
                   focusedBorder: OutlineInputBorder(
                     borderSide: const BorderSide(color: maincolor),
                     borderRadius: BorderRadius.circular(20.0),
@@ -63,19 +71,41 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             SizedBox(
               height: 50,
               width: 200,
-              child: OutlinedButton(
-                onPressed: () {
-                  Get.to(ConfirmCode());
-                  // if (_questionkey.currentState!.validate()) {}
+              child: Consumer<Auth>(
+                builder: (context, value, child) {
+                  return value.isloadingresetpass
+                      ? CupertinoActivityIndicator(
+                          radius: 15.0,
+                        )
+                      : OutlinedButton(
+                          onPressed: () {
+                            value
+                                .resetpass(
+                              email: _email.text,
+                            )
+                                .then((value) {
+                              if (value['status'] == true) {
+                                showMyToast(
+                                    context, value['message'], 'sucess');
+                                Get.offAll(ConfirmCode(
+                                  email: _email.text,
+                                ));
+                              } else {
+                                showMyToast(context, value['message'], 'error');
+                              }
+                            });
+                          },
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30.0))),
+                          ),
+                          child: const Text(
+                            'تاكيد',
+                            style: TextStyle(color: maincolor),
+                          ),
+                        );
                 },
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0))),
-                ),
-                child: const Text(
-                  'تاكيد',
-                  style: TextStyle(color: maincolor),
-                ),
               ),
             ),
           ],

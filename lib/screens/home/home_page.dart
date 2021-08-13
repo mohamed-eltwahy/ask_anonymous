@@ -1,25 +1,45 @@
 import 'dart:io';
-
 import 'package:ask_anonymous/screens/auth/editprofile.dart';
 import 'package:ask_anonymous/screens/auth/register_login.dart';
+import 'package:ask_anonymous/screens/home/myanswers.dart';
+import 'package:ask_anonymous/screens/home/myquestions.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:share/share.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../consts.dart';
-import '../ask_screen.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  SharedPreferences? pref;
+
+  HomePage({Key? key, this.pref}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   File? _image;
   final picker = ImagePicker();
+  TabController? _tabController;
+
+  @override
+  void initState() {
+    _tabController = TabController(length: 2, vsync: this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _tabController!.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,21 +74,36 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-                GestureDetector(
-                  onTap: () => pickImage(),
-                  child: Container(
-                    child: CircleAvatar(
-                      backgroundImage: _image == null
-                          ? AssetImage("assets/images/profile.png")
-                              as ImageProvider
-                          : FileImage(_image!),
-                      backgroundColor: Colors.white70,
-                      radius: 55,
-                    ),
-                  ),
-                ),
+                _image != null
+                    ? Container(
+                        height: 90,
+                        // width: 80,
+                        //     color: Colors.red,
+                        child: InkWell(
+                          onTap: () => pickImage(),
+                          child: CircleAvatar(
+                            backgroundImage: FileImage(
+                              _image!,
+                            ),
+                            maxRadius: 55,
+                            backgroundColor: Colors.transparent,
+                          ),
+                        ),
+                      )
+                    : Container(
+                        height: 90,
+                        //width: 80,
+                        child: InkWell(
+                          onTap: () => pickImage(),
+                          child: CircleAvatar(
+                            radius: 55,
+                            backgroundImage: CachedNetworkImageProvider(
+                                widget.pref!.getString('image') as String),
+                          ),
+                        ),
+                      ),
                 Text(
-                  'username',
+                  widget.pref!.getString('name').toString(),
                   style: TextStyle(color: Colors.black, fontSize: 16),
                 ),
                 GestureDetector(
@@ -89,69 +124,58 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: ListView(
-        physics: BouncingScrollPhysics(),
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: Text(
-              'الأسئلة :',
-              style: TextStyle(color: maincolor),
-            ),
-          ),
-          ListView.builder(
-              shrinkWrap: true,
-              physics: ScrollPhysics(),
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return Container(
-                  decoration: BoxDecoration(
-                      color: maincolor,
-                      borderRadius: BorderRadius.circular(20)),
-                  margin: EdgeInsets.all(20),
-                  width: double.infinity,
-                  height: 200,
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () => Get.to(AskScreen(
-                              name: 'username',
-                            )),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: CircleAvatar(
-                                backgroundImage:
-                                    AssetImage("assets/images/user.jpg"),
-                                radius: 20,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            'username',
-                            style: TextStyle(color: Colors.white, fontSize: 15),
-                          ),
-                        ],
-                      ),
-                      Flexible(
-                        child: Text(
-                          'هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها التطبيق.',
-                          overflow: TextOverflow.fade,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                          ),
-                        ),
-                      ),
-                    ],
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            // give the tab bar a height [can change hheight to preferred height]
+            Container(
+              height: 45,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(
+                  25.0,
+                ),
+              ),
+              child: TabBar(
+                controller: _tabController,
+                // give the indicator a decoration (color and border radius)
+                indicator: BoxDecoration(
+                  borderRadius: BorderRadius.circular(
+                    25.0,
                   ),
-                );
-              }),
-          SizedBox(
-            height: 100,
-          )
-        ],
+                  color: maincolor,
+                ),
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.black,
+                tabs: [
+                  // first tab [you can add an icon using the icon property]
+                  Tab(
+                    text: 'الأسئلة',
+                  ),
+
+                  // second tab [you can add an icon using the icon property]
+                  Tab(
+                    text: 'الردود',
+                  ),
+                ],
+              ),
+            ),
+            // tab bar view here
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  // first tab bar view widget
+                  MyAnswers(),
+
+                  // second tab bar view widget
+                  MyQuestions()
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
