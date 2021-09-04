@@ -9,16 +9,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../consts.dart';
 
 class MyQuestions extends StatefulWidget {
-  SharedPreferences? pref;
-
-  MyQuestions({Key? key, this.pref}) : super(key: key);
 
   @override
   _MyQuestionsState createState() => _MyQuestionsState();
 }
 
 class _MyQuestionsState extends State<MyQuestions> {
-  File? _image;
+  File _image;
   final picker = ImagePicker();
   void initState() {
     super.initState();

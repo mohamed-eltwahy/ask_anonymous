@@ -5,12 +5,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../consts.dart';
 import '../../myToast.dart';
 
 class NewPassword extends StatefulWidget {
-  const NewPassword({Key? key}) : super(key: key);
+  const NewPassword({Key key}) : super(key: key);
 
   @override
   _NewPasswordState createState() => _NewPasswordState();
@@ -113,7 +114,9 @@ class _NewPasswordState extends State<NewPassword> {
                             radius: 15.0,
                           )
                         : OutlinedButton(
-                            onPressed: () {
+                            onPressed: () async {
+                                                                       SharedPreferences pref = await SharedPreferences.getInstance();
+
                               value
                                   .newpass(
                                 newpassword: _password.text,
@@ -123,7 +126,7 @@ class _NewPasswordState extends State<NewPassword> {
                                 if (value['status'] == true) {
                                   showMyToast(
                                       context, value['message'], 'sucess');
-                                  Get.offAll(HomePage());
+                                  Get.offAll(HomePage(pref: pref,));
                                 } else {
                                   showMyToast(
                                       context, value['message'], 'error');

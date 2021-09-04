@@ -9,7 +9,7 @@ import '../../consts.dart';
 import '../../myToast.dart';
 
 class ForgetPassword extends StatefulWidget {
-  const ForgetPassword({Key? key}) : super(key: key);
+  const ForgetPassword({Key key}) : super(key: key);
 
   @override
   _ForgetPasswordState createState() => _ForgetPasswordState();

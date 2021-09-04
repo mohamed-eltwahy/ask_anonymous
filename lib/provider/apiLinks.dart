@@ -5,4 +5,5 @@ class ApiLinks{
   static String login='/login';
   static String resetpass='/resetpassword';
   static String newpass='/newpassword';
+  static String updateuser='/update';
 }

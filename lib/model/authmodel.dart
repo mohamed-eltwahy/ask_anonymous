@@ -1,20 +1,20 @@
 class User {
-  String token = '';
-  int id = 0;
-  String name = '';
-  String email = '';
-  String image = '';
-  String link = '';
-  int active = 0;
+  String token ;
+  int id ;
+  String name ;
+  String email ;
+  String image ;
+  String link ;
+  int active ;
 
   User(
-      {required this.token,
-      required this.id,
-      required this.name,
-      required this.email,
-      required this.image,
-      required this.link,
-      required this.active});
+      { this.token,
+       this.id,
+       this.name,
+       this.email,
+       this.image,
+       this.link,
+       this.active});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -22,7 +22,7 @@ class User {
     email = json['email'];
     image = json['image'];
     link = json['link'];
-    active = int.tryParse(json['active'].toString())!;
+    active = int.tryParse(json['active'].toString());
   }
 
   Map<String, dynamic> toJson() {

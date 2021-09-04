@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../myToast.dart';
 
 class LoginRegisterScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class LoginRegisterScreen extends StatefulWidget {
 class _LoginRegisterScreenState extends State<LoginRegisterScreen>
     with TickerProviderStateMixin {
   bool inlogin = true;
-  String? identifier;
+  String identifier;
   Future<void> getDeviceDetails() async {
     final DeviceInfoPlugin deviceInfoPlugin = new DeviceInfoPlugin();
     try {
@@ -326,8 +327,9 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen>
                                       radius: 15.0,
                                     )
                                   : OutlinedButton(
-                                      onPressed: () {
-                                        if (_formkey.currentState!.validate()) {
+                                      onPressed: () async {
+                                         SharedPreferences pref = await SharedPreferences.getInstance();
+                                        if (_formkey.currentState.validate()) {
                                           FocusScope.of(context).unfocus();
                                           if (!inlogin) {
                                             value
@@ -343,6 +345,7 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen>
                                                 showMyToast(context,
                                                     value['message'], 'sucess');
                                                 Get.offAll(ConfirmCode(
+                                                  pref:pref,
                                                   type: 'conf',
                                                   email: _email.text,
                                                   fromauth: true,
@@ -363,7 +366,7 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen>
                                               if (value['status'] == true) {
                                                 showMyToast(context,
                                                     value['message'], 'sucess');
-                                                Get.offAll(HomePage());
+                                                Get.offAll(HomePage(pref: pref,));
                                               } else {
                                                 if (value['data']['data'] ==
                                                         "unactive"

@@ -2,11 +2,11 @@ import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
 
 myDio({
-  required String url,
-  required String methodType,
+   String url,
+   String methodType,
   dynamic dioBody,
-  Map<String, dynamic>? dioHeaders,
-  required String appLanguage,
+  Map<String, dynamic> dioHeaders,
+   String appLanguage,
 }) async {
   var response;
   bool isSocketException = false;
@@ -22,7 +22,7 @@ myDio({
           queryParameters: dioBody,
           options: Options(
               headers: dioHeaders,
-              validateStatus: (status) => status! >= 200 && status <= 500),
+              validateStatus: (status) => status >= 200 && status <= 500),
         )
             .catchError((onError) {
           isSocketException = true;
@@ -36,7 +36,7 @@ myDio({
                 options: Options(
                     headers: dioHeaders,
                     validateStatus: (status) =>
-                        status! >= 200 && status <= 500))
+                        status >= 200 && status <= 500))
             .catchError((onError) {
           isSocketException = true;
         });
@@ -106,6 +106,6 @@ String serverErrorError(String appLanguage) {
 }
 
 Map<dynamic, dynamic> responsMap(
-    {bool? status, String? message, dynamic data}) {
+    {bool status, String message, dynamic data}) {
   return {"status": status, "message": message, "data": data};
 }

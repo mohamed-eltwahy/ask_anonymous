@@ -1,13 +1,12 @@
 import 'dart:io';
-
 import 'package:ask_anonymous/consts.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AskScreen extends StatefulWidget {
-  String? name;
-   AskScreen({this.name}) ;
+  String name;
+  AskScreen({this.name});
 
   @override
   _AskScreenState createState() => _AskScreenState();
@@ -16,7 +15,7 @@ class AskScreen extends StatefulWidget {
 class _AskScreenState extends State<AskScreen> {
   TextEditingController _question = TextEditingController();
   final _questionkey = GlobalKey<FormState>();
-  File? _image;
+  File _image;
   final picker = ImagePicker();
 
   @override
@@ -24,7 +23,10 @@ class _AskScreenState extends State<AskScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(widget.name.toString(),style: TextStyle(color: Colors.white),),
+        title: Text(
+          widget.name.toString(),
+          style: TextStyle(color: Colors.white),
+        ),
         automaticallyImplyLeading: false,
         elevation: 0,
         actions: [
@@ -112,7 +114,7 @@ class _AskScreenState extends State<AskScreen> {
                             ),
                             height: 150,
                             width: 150,
-                            child: Image.file(_image!),
+                            child: Image.file(_image),
                           ),
                   ),
                 ),
@@ -124,14 +126,14 @@ class _AskScreenState extends State<AskScreen> {
             SizedBox(
               height: 50,
               width: 200,
-              child: OutlinedButton(
+              child: FlatButton(
                 onPressed: () {
-                  if (_questionkey.currentState!.validate()) {}
+                  if (_questionkey.currentState.validate()) {}
                 },
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0))),
-                ),
+                color: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    side: BorderSide(color: Color.fromRGBO(0, 160, 227, 1))),
                 child: const Text(
                   "ارسال",
                   style: TextStyle(color: maincolor),
@@ -153,5 +155,4 @@ class _AskScreenState extends State<AskScreen> {
         print('No image selected.');
       }
     });
-  }
-}
+  }}
