@@ -9,23 +9,25 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../consts.dart';
 import '../../myToast.dart';
 
 class ConfirmCode extends StatefulWidget {
-  bool? fromauth;
-  String? email;
-  String? type;
-  ConfirmCode({this.fromauth, this.email, this.type});
+  bool fromauth;
+  String email;
+  String type;
+  SharedPreferences pref;
+  ConfirmCode({this.fromauth, this.email, this.type,this.pref});
 
   @override
   _ConfirmCodeState createState() => _ConfirmCodeState();
 }
 
 class _ConfirmCodeState extends State<ConfirmCode> {
-  StreamController<ErrorAnimationType>? errorController;
-  TextEditingController? _pin;
+  StreamController<ErrorAnimationType> errorController;
+  TextEditingController _pin;
   bool haserror = false;
   bool view = false;
   @override
@@ -113,7 +115,7 @@ class _ConfirmCodeState extends State<ConfirmCode> {
                                   showMyToast(
                                       context, value['message'], 'sucess');
                                   widget.type == 'conf'
-                                      ? Get.offAll(HomePage())
+                                      ? Get.offAll(HomePage(pref: widget.pref,))
                                       : Get.offAll(NewPassword());
                                 } else {
                                   showMyToast(

@@ -4,21 +4,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../consts.dart';
 
 class MyAnswers extends StatefulWidget {
-  SharedPreferences? pref;
 
-  MyAnswers({Key? key, this.pref}) : super(key: key);
 
   @override
   _MyAnswersState createState() => _MyAnswersState();
 }
 
 class _MyAnswersState extends State<MyAnswers> {
-  File? _image;
+  File _image;
   final picker = ImagePicker();
   void initState() {
     super.initState();

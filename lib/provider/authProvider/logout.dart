@@ -8,7 +8,7 @@ import '../apiLinks.dart';
 class Logout with ChangeNotifier {
   bool _isloadinglogout = false;
   bool get isloadinglogout => _isloadinglogout;
-  late Future<SharedPreferences> prefs;
+   Future<SharedPreferences> prefs;
   update(Future<SharedPreferences> pref) {
     this.prefs = pref;
   }
@@ -16,7 +16,7 @@ class Logout with ChangeNotifier {
   dynamic logout() async {
     _isloadinglogout = true;
     notifyListeners();
-    String? apitoken = await prefs.then((value) => value.getString('token'));
+    String apitoken = await prefs.then((value) => value.getString('token'));
 
     Map<dynamic, dynamic> logout =await myDio(
         url: ApiLinks.baseUrl + ApiLinks.login,

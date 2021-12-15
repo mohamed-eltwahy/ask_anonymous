@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 
-   showMyToast(BuildContext context, String msg, String typee, {double? fontSize, bool cancel = false,bool red =false}) async{
+   showMyToast(BuildContext context, String msg, String typee, {double fontSize, bool cancel = false,bool red =false}) async{
   try{
     Toast toastLength = Toast.LENGTH_LONG;
     ToastGravity _gravity;

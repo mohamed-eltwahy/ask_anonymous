@@ -14,9 +14,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../consts.dart';
 
 class HomePage extends StatefulWidget {
-  SharedPreferences? pref;
+  SharedPreferences pref;
 
-  HomePage({Key? key, this.pref}) : super(key: key);
+  HomePage({this.pref});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -24,12 +24,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
-  File? _image;
+  File _image;
   final picker = ImagePicker();
-  TabController? _tabController;
-
+  TabController _tabController;
   @override
+  String name;
   void initState() {
+    setState(() {
+      name = widget.pref.getString('name').toString();
+    });
     _tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
@@ -37,7 +40,7 @@ class _HomePageState extends State<HomePage>
   @override
   void dispose() {
     super.dispose();
-    _tabController!.dispose();
+    _tabController.dispose();
   }
 
   @override
@@ -64,12 +67,14 @@ class _HomePageState extends State<HomePage>
                         color: maincolor,
                       ),
                       onPressed: () {
-                        final RenderBox? box =
+                        String url = widget.pref.getString('link');
+                        print('urllllll' + url);
+                        final RenderBox box =
                             context.findRenderObject() as RenderBox;
-                        Share.share('https://www.google.com/',
+                        Share.share('$url',
                             subject: 'Copy Link ',
                             sharePositionOrigin:
-                                box!.localToGlobal(Offset.zero) & box.size);
+                                box.localToGlobal(Offset.zero) & box.size);
                       },
                     ),
                   ],
@@ -83,7 +88,7 @@ class _HomePageState extends State<HomePage>
                           onTap: () => pickImage(),
                           child: CircleAvatar(
                             backgroundImage: FileImage(
-                              _image!,
+                              _image,
                             ),
                             maxRadius: 55,
                             backgroundColor: Colors.transparent,
@@ -98,16 +103,16 @@ class _HomePageState extends State<HomePage>
                           child: CircleAvatar(
                             radius: 55,
                             backgroundImage: CachedNetworkImageProvider(
-                                widget.pref!.getString('image') as String),
+                                widget.pref.getString('image')),
                           ),
                         ),
                       ),
                 Text(
-                  widget.pref!.getString('name').toString(),
+                  name,
                   style: TextStyle(color: Colors.black, fontSize: 16),
                 ),
                 GestureDetector(
-                  onTap: () => editalert(context),
+                  onTap: () => editalert(context, widget.pref),
                   child: Text(
                     'تعديل البيانات الشخصيه',
                     style: TextStyle(

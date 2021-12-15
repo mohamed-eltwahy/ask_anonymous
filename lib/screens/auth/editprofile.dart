@@ -1,8 +1,14 @@
 import 'package:ask_anonymous/consts.dart';
+import 'package:ask_anonymous/provider/authProvider/editprofile.dart';
+import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-editalert(BuildContext context) {
+import '../../myToast.dart';
+
+editalert(BuildContext context, SharedPreferences pref) {
   return showGeneralDialog(
       barrierColor: Colors.black.withOpacity(0.5),
       transitionBuilder: (context, a1, a2, widget) {
@@ -10,7 +16,7 @@ editalert(BuildContext context) {
           scale: a1.value,
           child: Opacity(
             opacity: a1.value,
-            child: EditProfile(),
+            child: EditProfile(pref),
           ),
         );
       },
@@ -19,16 +25,32 @@ editalert(BuildContext context) {
       barrierLabel: '',
       context: context,
       pageBuilder: (context, animation1, animation2) {
-        return null!;
+        return null;
       });
 }
 
+TextEditingController _name = new TextEditingController();
+TextEditingController _email = new TextEditingController();
+
 class EditProfile extends StatefulWidget {
+  SharedPreferences pref;
+  EditProfile(this.pref);
   @override
   _EditProfileState createState() => _EditProfileState();
 }
 
 class _EditProfileState extends State<EditProfile> {
+  Future<dynamic> getuserdata() async {
+    _name.text = widget.pref.getString('name');
+    _email.text = widget.pref.getString('email');
+  }
+
+  @override
+  void initState() {
+    getuserdata();
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     return AlertDialog(
       scrollable: true,
@@ -58,8 +80,8 @@ class _EditProfileState extends State<EditProfile> {
                 return 'المحتوي مطلوب';
               }
             },
-            // controller: _question,
-            keyboardType: TextInputType.multiline,
+            controller: _name,
+            // keyboardType: TextInputType.multiline,
             decoration: InputDecoration(
               // prefixIcon:
               //     ImageIcon(AssetImage('assets/icons/question (7).png')),
@@ -90,8 +112,8 @@ class _EditProfileState extends State<EditProfile> {
                 return 'المحتوي مطلوب';
               }
             },
-            // controller: _question,
-            keyboardType: TextInputType.multiline,
+            controller: _email,
+            keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               // prefixIcon:
               //     ImageIcon(AssetImage('assets/icons/question (7).png')),
@@ -116,25 +138,47 @@ class _EditProfileState extends State<EditProfile> {
           SizedBox(
             height: 10,
           ),
-          SizedBox(
-            height: 50,
-            width: 200,
-            child: OutlinedButton(
-              onPressed: () {
-                Get.back();
-                // if (_questionkey.currentState!.validate()) {}
-              },
-              style: ButtonStyle(
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0))),
-              ),
-              child: const Text(
-                'تعديل',
-                style: TextStyle(color: maincolor),
-              ),
-            ),
+          Consumer<EditProvider>(
+            builder: (context, value, child) {
+              return value.isloadingedit
+                  ? CupertinoActivityIndicator(
+                      radius: 15.0,
+                    )
+                  : SizedBox(
+                      height: 50,
+                      width: 200,
+                      child: OutlinedButton(
+                        onPressed: () {
+                          FocusScope.of(context).unfocus();
+
+                          value
+                              .updateUser(
+                            name: _name.text,
+                            email: _email.text,
+                          )
+                              .then((value) {
+                            if (value['status'] == true) {
+                              showMyToast(context, value['message'], 'sucess');
+                              setState(() {});
+                              Get.back();
+                            } else {
+                              showMyToast(context, value['message'], 'error');
+                            }
+                          });
+                        },
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0))),
+                        ),
+                        child: const Text(
+                          'تعديل',
+                          style: TextStyle(color: maincolor),
+                        ),
+                      ),
+                    );
+            },
           ),
-         
         ],
       ),
     );

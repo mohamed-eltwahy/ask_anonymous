@@ -13,9 +13,9 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-  late Animation<Offset> _translateAnimation;
+   AnimationController _animationController;
+   Animation<double> _fadeAnimation;
+   Animation<Offset> _translateAnimation;
   Future<void> navigatToNextScreen() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     if (pref.getBool('isLogin') == true) {

@@ -8,25 +8,23 @@ class Auth with ChangeNotifier {
   bool _isloadingregister = false;
   bool isloadinglogin = false;
   bool _isloadingverify = false;
-  bool isloadingresend = false;
   bool isloadingresetpass = false;
   bool get isloadingverify => _isloadingverify;
   bool get isloadingregister => _isloadingregister;
-  late User user;
-    late SharedPreferences prefs;
+   User user;
+     SharedPreferences prefs;
    Future<SharedPreferences> initSharedPrefs() async {
     prefs = await SharedPreferences.getInstance();
     return prefs;
   }
 ///////////////////////////////////////register////////////////////////////
   dynamic register(
-      {String? name,
-      String? email,
-      String? password,
-      String? confirm,
-      String? deviceId}) async {
+      {String name,
+      String email,
+      String password,
+      String confirm,
+      String deviceId}) async {
     _isloadingregister = true;
-    isloadingresend = true;
     notifyListeners();
     dynamic body = {
       "name": name,
@@ -49,12 +47,10 @@ class Auth with ChangeNotifier {
       user = User.fromJson(register['data']);
 
       _isloadingregister = false;
-      isloadingresend = false;
       notifyListeners();
       return register;
     } else {
       _isloadingregister = false;
-      isloadingresend = false;
       notifyListeners();
       return register;
     }
@@ -62,8 +58,8 @@ class Auth with ChangeNotifier {
 
 ///////////////////////////////////////////verify account///////////////////////
   dynamic verify({
-    String? code,
-    String? email,
+    String code,
+    String email,
   }) async {
     _isloadingverify = true;
     notifyListeners();
@@ -95,7 +91,7 @@ class Auth with ChangeNotifier {
   }
 
   //////////////////////////////login///////////////////////
-  dynamic login({String? email, String? password, String? deviceId}) async {
+  dynamic login({String email, String password, String deviceId}) async {
     isloadinglogin = true;
     notifyListeners();
     dynamic body = {
@@ -128,7 +124,7 @@ class Auth with ChangeNotifier {
   }
 
   //////////////////////////////////reset pass//////////////////////////
-  dynamic resetpass({String? email}) async {
+  dynamic resetpass({String email}) async {
     isloadingresetpass = true;
     notifyListeners();
     dynamic body = {

@@ -1,4 +1,5 @@
 import 'package:ask_anonymous/consts.dart';
+import 'package:ask_anonymous/provider/authProvider/editprofile.dart';
 import 'package:ask_anonymous/provider/authProvider/logout.dart';
 import 'package:ask_anonymous/provider/authProvider/newpassProvider.dart';
 import 'package:ask_anonymous/provider/authProvider/register_loginProvider.dart';
@@ -26,14 +27,18 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<Auth, NewPassProvider>(
           create: (ctx) => NewPassProvider(),
           update: (ctx, auth, newpass) =>
-              newpass!..update(auth.initSharedPrefs()),
+              newpass..update(auth.initSharedPrefs()),
         ),
          ChangeNotifierProxyProvider<Auth, Logout>(
           create: (ctx) => Logout(),
           update: (ctx, auth, logout) =>
-              logout!..update(auth.initSharedPrefs()),
+              logout..update(auth.initSharedPrefs()),
         ),
-        //Logout
+        
+        ChangeNotifierProvider(
+          create: (context) => EditProvider(),
+        ),
+        //EditProvider
         ],
       child: GetMaterialApp(
         translations: Translation(),
