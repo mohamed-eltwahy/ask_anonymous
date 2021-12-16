@@ -15,19 +15,19 @@ import '../../consts.dart';
 import '../../myToast.dart';
 
 class ConfirmCode extends StatefulWidget {
-  bool fromauth;
-  String email;
-  String type;
-  SharedPreferences pref;
-  ConfirmCode({this.fromauth, this.email, this.type,this.pref});
+  bool? fromauth;
+  String? email;
+  String? type;
+  SharedPreferences? pref;
+  ConfirmCode({ this.fromauth,  this.email,  this.type, this.pref});
 
   @override
   _ConfirmCodeState createState() => _ConfirmCodeState();
 }
 
 class _ConfirmCodeState extends State<ConfirmCode> {
-  StreamController<ErrorAnimationType> errorController;
-  TextEditingController _pin;
+   StreamController<ErrorAnimationType>? errorController;
+   TextEditingController? _pin;
   bool haserror = false;
   bool view = false;
   @override

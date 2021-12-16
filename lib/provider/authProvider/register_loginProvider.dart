@@ -11,19 +11,19 @@ class Auth with ChangeNotifier {
   bool isloadingresetpass = false;
   bool get isloadingverify => _isloadingverify;
   bool get isloadingregister => _isloadingregister;
-   User user;
-     SharedPreferences prefs;
+   User? user;
+     SharedPreferences? prefs;
    Future<SharedPreferences> initSharedPrefs() async {
     prefs = await SharedPreferences.getInstance();
-    return prefs;
+    return prefs!;
   }
 ///////////////////////////////////////register////////////////////////////
   dynamic register(
-      {String name,
-      String email,
-      String password,
-      String confirm,
-      String deviceId}) async {
+      {String? name,
+      String? email,
+      String? password,
+      String? confirm,
+      String? deviceId}) async {
     _isloadingregister = true;
     notifyListeners();
     dynamic body = {
@@ -58,8 +58,8 @@ class Auth with ChangeNotifier {
 
 ///////////////////////////////////////////verify account///////////////////////
   dynamic verify({
-    String code,
-    String email,
+    String? code,
+    String? email,
   }) async {
     _isloadingverify = true;
     notifyListeners();
@@ -78,7 +78,7 @@ class Auth with ChangeNotifier {
 
     if (verify['status'] == true) {
       user = User.fromJson(verify['data']['user']);
-      saveShared(user, verify['data']['token']);
+      saveShared(user!, verify['data']['token']);
 
       _isloadingverify = false;
       notifyListeners();
@@ -91,7 +91,7 @@ class Auth with ChangeNotifier {
   }
 
   //////////////////////////////login///////////////////////
-  dynamic login({String email, String password, String deviceId}) async {
+  dynamic login({String? email, String? password, String? deviceId}) async {
     isloadinglogin = true;
     notifyListeners();
     dynamic body = {
@@ -111,7 +111,7 @@ class Auth with ChangeNotifier {
 
     if (login['status'] == true) {
       user = User.fromJson(login['data']['user']);
-      saveShared(user, login['data']['token']);
+      saveShared(user!, login['data']['token']);
 
       isloadinglogin = false;
       notifyListeners();
@@ -124,7 +124,7 @@ class Auth with ChangeNotifier {
   }
 
   //////////////////////////////////reset pass//////////////////////////
-  dynamic resetpass({String email}) async {
+  dynamic resetpass({String? email}) async {
     isloadingresetpass = true;
     notifyListeners();
     dynamic body = {
@@ -159,10 +159,10 @@ class Auth with ChangeNotifier {
     prefs = await SharedPreferences.getInstance();
     prefs.setBool('isLogin', true);
     prefs.setString('token', usertoken);
-    prefs.setInt('id', user.id);
-    prefs.setString('name', user.name);
-    prefs.setString('email', user.email);
-    prefs.setString('image', user.image);
-    prefs.setString('link', user.link);
+    prefs.setInt('id', user.id!);
+    prefs.setString('name', user.name!);
+    prefs.setString('email', user.email!);
+    prefs.setString('image', user.image!);
+    prefs.setString('link', user.link!);
   }
 }

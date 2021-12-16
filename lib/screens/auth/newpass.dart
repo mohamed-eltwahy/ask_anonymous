@@ -11,7 +11,6 @@ import '../../consts.dart';
 import '../../myToast.dart';
 
 class NewPassword extends StatefulWidget {
-  const NewPassword({Key key}) : super(key: key);
 
   @override
   _NewPasswordState createState() => _NewPasswordState();

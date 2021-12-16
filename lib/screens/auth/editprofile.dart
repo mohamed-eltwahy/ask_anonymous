@@ -25,7 +25,7 @@ editalert(BuildContext context, SharedPreferences pref) {
       barrierLabel: '',
       context: context,
       pageBuilder: (context, animation1, animation2) {
-        return null;
+        return SizedBox();
       });
 }
 
@@ -41,8 +41,8 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
   Future<dynamic> getuserdata() async {
-    _name.text = widget.pref.getString('name');
-    _email.text = widget.pref.getString('email');
+    _name.text = widget.pref.getString('name')!;
+    _email.text = widget.pref.getString('email')!;
   }
 
   @override

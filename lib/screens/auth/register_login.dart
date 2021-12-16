@@ -22,7 +22,7 @@ class LoginRegisterScreen extends StatefulWidget {
 class _LoginRegisterScreenState extends State<LoginRegisterScreen>
     with TickerProviderStateMixin {
   bool inlogin = true;
-  String identifier;
+  String? identifier;
   Future<void> getDeviceDetails() async {
     final DeviceInfoPlugin deviceInfoPlugin = new DeviceInfoPlugin();
     try {
@@ -329,7 +329,7 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen>
                                   : OutlinedButton(
                                       onPressed: () async {
                                          SharedPreferences pref = await SharedPreferences.getInstance();
-                                        if (_formkey.currentState.validate()) {
+                                        if (_formkey.currentState!.validate()) {
                                           FocusScope.of(context).unfocus();
                                           if (!inlogin) {
                                             value

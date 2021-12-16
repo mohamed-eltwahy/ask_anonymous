@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:ask_anonymous/provider/authProvider/logout.dart';
 import 'package:ask_anonymous/screens/auth/editprofile.dart';
 import 'package:ask_anonymous/screens/auth/register_login.dart';
 import 'package:ask_anonymous/screens/home/myanswers.dart';
@@ -8,13 +9,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../consts.dart';
+import '../../myToast.dart';
 
 class HomePage extends StatefulWidget {
-  SharedPreferences pref;
+  SharedPreferences? pref;
 
   HomePage({this.pref});
 
@@ -24,14 +27,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
-  File _image;
+  File? _image;
   final picker = ImagePicker();
-  TabController _tabController;
+  TabController? _tabController;
   @override
-  String name;
+  String? name;
   void initState() {
     setState(() {
-      name = widget.pref.getString('name').toString();
+      name = widget.pref?.getString('name').toString();
     });
     _tabController = TabController(length: 2, vsync: this);
     super.initState();
@@ -40,7 +43,7 @@ class _HomePageState extends State<HomePage>
   @override
   void dispose() {
     super.dispose();
-    _tabController.dispose();
+    _tabController?.dispose();
   }
 
   @override
@@ -67,8 +70,8 @@ class _HomePageState extends State<HomePage>
                         color: maincolor,
                       ),
                       onPressed: () {
-                        String url = widget.pref.getString('link');
-                        print('urllllll' + url);
+                        String? url = widget.pref?.getString('link');
+                        print('urllllll' + url!);
                         final RenderBox box =
                             context.findRenderObject() as RenderBox;
                         Share.share('$url',
@@ -79,40 +82,41 @@ class _HomePageState extends State<HomePage>
                     ),
                   ],
                 ),
-                _image != null
-                    ? Container(
-                        height: 90,
-                        // width: 80,
-                        //     color: Colors.red,
-                        child: InkWell(
-                          onTap: () => pickImage(),
-                          child: CircleAvatar(
-                            backgroundImage: FileImage(
-                              _image,
-                            ),
-                            maxRadius: 55,
-                            backgroundColor: Colors.transparent,
-                          ),
+                if (_image != null)
+                  Container(
+                    height: 90,
+                    // width: 80,
+                    //     color: Colors.red,
+                    child: InkWell(
+                      onTap: () => pickImage(),
+                      child: CircleAvatar(
+                        backgroundImage: FileImage(
+                          _image!,
                         ),
-                      )
-                    : Container(
-                        height: 90,
-                        //width: 80,
-                        child: InkWell(
-                          onTap: () => pickImage(),
-                          child: CircleAvatar(
-                            radius: 55,
-                            backgroundImage: CachedNetworkImageProvider(
-                                widget.pref.getString('image')),
-                          ),
-                        ),
+                        maxRadius: 55,
+                        backgroundColor: Colors.transparent,
                       ),
+                    ),
+                  )
+                else
+                  Container(
+                    height: 90,
+                    //width: 80,
+                    child: InkWell(
+                      onTap: () => pickImage(),
+                      child: CircleAvatar(
+                        radius: 55,
+                        backgroundImage: CachedNetworkImageProvider(
+                            widget.pref!.getString('image')!),
+                      ),
+                    ),
+                  ),
                 Text(
-                  name,
+                  name!,
                   style: TextStyle(color: Colors.black, fontSize: 16),
                 ),
                 GestureDetector(
-                  onTap: () => editalert(context, widget.pref),
+                  onTap: () => editalert(context, widget.pref!),
                   child: Text(
                     'تعديل البيانات الشخصيه',
                     style: TextStyle(
@@ -200,22 +204,49 @@ class _HomePageState extends State<HomePage>
 class PopUpMenuWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return PopupMenuButton(
-      onSelected: (_) => Get.offAll(LoginRegisterScreen()),
-      icon: Icon(
-        Icons.more_vert,
-        color: maincolor,
-        size: 25,
-      ),
-      itemBuilder: (context) => [
-        PopupMenuItem(
-          value: 1,
-          child: Text(
+    return Container(
+      margin: EdgeInsets.all(10),
+      child: Consumer<Logout>(builder: (context, value, child) {
+        return RaisedButton.icon(
+          onPressed: () async {
+            Get.back();
+            showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (BuildContext context) {
+                  return Center(
+                      child: Container(
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: maincolor,
+                      ),
+                    ),
+                  ));
+                });
+            await value.logout().then((value) {
+              if (value['status'] == true) {
+                Get.offAll(LoginRegisterScreen());
+                showMyToast(context, value['message'], 'success');
+              } else {
+                showMyToast(context, value['message'], 'error');
+              }
+            });
+          },
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          label: Text(
             'تسجيل الخروج',
-            style: TextStyle(fontSize: 15),
+            style: TextStyle(color: Colors.white),
           ),
-        ),
-      ],
+          icon: Icon(
+            Icons.logout,
+            color: Colors.white,
+          ),
+          textColor: Colors.white,
+          splashColor: Colors.grey[400],
+          color: maincolor,
+        );
+      }),
     );
   }
 }

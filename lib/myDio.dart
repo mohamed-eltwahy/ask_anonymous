@@ -2,11 +2,11 @@ import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
 
 myDio({
-   String url,
-   String methodType,
+   String? url,
+   String? methodType,
   dynamic dioBody,
-  Map<String, dynamic> dioHeaders,
-   String appLanguage,
+  Map<String, dynamic>? dioHeaders,
+   String? appLanguage,
 }) async {
   var response;
   bool isSocketException = false;
@@ -18,11 +18,11 @@ myDio({
       if (methodType == 'get') {
         response = await Dio()
             .get(
-          url,
+          url!,
           queryParameters: dioBody,
           options: Options(
               headers: dioHeaders,
-              validateStatus: (status) => status >= 200 && status <= 500),
+              validateStatus: (status) => status! >= 200 && status <= 500),
         )
             .catchError((onError) {
           isSocketException = true;
@@ -31,12 +31,12 @@ myDio({
         // print('response is >>> '+response.toString());
       } else if (methodType == 'post') {
         response = await Dio()
-            .post(url,
+            .post(url!,
                 queryParameters: dioBody,
                 options: Options(
                     headers: dioHeaders,
                     validateStatus: (status) =>
-                        status >= 200 && status <= 500))
+                        status! >= 200 && status <= 500))
             .catchError((onError) {
           isSocketException = true;
         });
@@ -51,10 +51,10 @@ myDio({
             data: response.data['data']);
       } else if (response.statusCode >= 500) {
         return responsMap(
-            status: false, message: serverErrorError(appLanguage));
+            status: false, message: serverErrorError(appLanguage!));
       } else if (isSocketException) {
         return responsMap(
-            status: false, message: weakInternetError(appLanguage));
+            status: false, message: weakInternetError(appLanguage!));
       } else if (response.statusCode >= 400 && response.statusCode <= 499) {
         return responsMap(
             status: false,
@@ -62,16 +62,16 @@ myDio({
             data: response.data['data']);
       } else {
         return responsMap(
-            status: false, message: globalError(appLanguage), data: null);
+            status: false, message: globalError(appLanguage!), data: null);
       }
     } catch (e) {
       print('its Error Mohamed >>>> ' + e.toString());
       return responsMap(
-          status: false, message: globalError(appLanguage), data: null);
+          status: false, message: globalError(appLanguage!), data: null);
     }
   } else {
     return responsMap(
-        status: false, message: noInternetsError(appLanguage), data: null);
+        status: false, message: noInternetsError(appLanguage!), data: null);
   }
 }
 
@@ -106,6 +106,6 @@ String serverErrorError(String appLanguage) {
 }
 
 Map<dynamic, dynamic> responsMap(
-    {bool status, String message, dynamic data}) {
+    {bool? status, String? message, dynamic data}) {
   return {"status": status, "message": message, "data": data};
 }

@@ -6,13 +6,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProvider with ChangeNotifier {
   bool isloadingedit = false;
-  User user;
+  User? user;
 
-  dynamic updateUser({String name, String email}) async {
+  dynamic updateUser({String? name, String? email}) async {
     isloadingedit = true;
     notifyListeners();
     SharedPreferences pref = await SharedPreferences.getInstance();
-    String apitoken = pref.getString('token');
+    String? apitoken = pref.getString('token');
 
     Map<dynamic, dynamic> updateUser = await myDio(
       url: ApiLinks.baseUrl + ApiLinks.updateuser,
@@ -28,7 +28,7 @@ class EditProvider with ChangeNotifier {
 
       /////////////////update data user
       user = User.fromJson(updateUser['data']);
-      saveShared(user);
+      saveShared(user!);
 //pref.get(key)
       return updateUser;
     } else {
@@ -42,10 +42,10 @@ class EditProvider with ChangeNotifier {
     SharedPreferences prefs;
 
     prefs = await SharedPreferences.getInstance();
-    prefs.setInt('id', user.id);
-    prefs.setString('name', user.name);
-    prefs.setString('email', user.email);
-    prefs.setString('image', user.image);
-    prefs.setString('link', user.link);
+    prefs.setInt('id', user.id!);
+    prefs.setString('name', user.name!);
+    prefs.setString('email', user.email!);
+    prefs.setString('image', user.image!);
+    prefs.setString('link', user.link!);
   }
 }

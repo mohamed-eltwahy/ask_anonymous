@@ -15,7 +15,7 @@ class AskScreen extends StatefulWidget {
 class _AskScreenState extends State<AskScreen> {
   TextEditingController _question = TextEditingController();
   final _questionkey = GlobalKey<FormState>();
-  late File _image;
+   File? _image;
   final picker = ImagePicker();
 
   @override
@@ -114,7 +114,7 @@ class _AskScreenState extends State<AskScreen> {
                             ),
                             height: 150,
                             width: 150,
-                            child: Image.file(_image),
+                            child: Image.file(_image!),
                           ),
                   ),
                 ),

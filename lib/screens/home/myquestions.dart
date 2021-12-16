@@ -15,7 +15,7 @@ class MyQuestions extends StatefulWidget {
 }
 
 class _MyQuestionsState extends State<MyQuestions> {
-  File _image;
+  File? _image;
   final picker = ImagePicker();
   void initState() {
     super.initState();

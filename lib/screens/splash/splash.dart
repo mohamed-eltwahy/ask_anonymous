@@ -13,9 +13,9 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
-   AnimationController _animationController;
-   Animation<double> _fadeAnimation;
-   Animation<Offset> _translateAnimation;
+   AnimationController? _animationController;
+   Animation<double>? _fadeAnimation;
+   Animation<Offset>? _translateAnimation;
   Future<void> navigatToNextScreen() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     if (pref.getBool('isLogin') == true) {
@@ -34,7 +34,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     );
     _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
-        parent: _animationController,
+        parent: _animationController!,
         curve: Curves.easeInOutCubic,
       ),
     );
@@ -42,10 +42,10 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
       begin: Offset(0, 55),
       end: Offset(0, 0),
     ).animate(CurvedAnimation(
-      parent: _animationController,
+      parent: _animationController!,
       curve: Curves.easeOutCubic,
     ));
-    _animationController.forward();
+    _animationController!.forward();
 
     Future.delayed(Duration.zero, () async {});
 
@@ -56,7 +56,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
-    _animationController.dispose();
+    _animationController!.dispose();
     super.dispose();
   }
 
@@ -72,11 +72,11 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
               padding: EdgeInsets.symmetric(horizontal: width * 0.1),
               child: Center(
                 child: AnimatedBuilder(
-                  animation: _animationController,
+                  animation: _animationController!,
                   builder: (cxt, child) => FadeTransition(
-                    opacity: _fadeAnimation,
+                    opacity: _fadeAnimation!,
                     child: Transform.translate(
-                      offset: _translateAnimation.value,
+                      offset: _translateAnimation!.value,
                       child: child,
                     ),
                   ),

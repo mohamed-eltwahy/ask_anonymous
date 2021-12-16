@@ -6,16 +6,16 @@ import '../apiLinks.dart';
 
 class NewPassProvider with ChangeNotifier {
   bool isloadingnewpass = false;
-   Future<SharedPreferences> prefs;
+    Future<SharedPreferences>? prefs;
   update(Future<SharedPreferences> pref) {
     this.prefs = pref;
   }
 
   ////////////////////////////////////////////////new pass///////////////////
-  dynamic newpass({String newpassword, String confirmpass}) async {
+  dynamic newpass({String? newpassword, String? confirmpass}) async {
     isloadingnewpass = true;
     notifyListeners();
-    String apitoken = await prefs.then((value) => value.getString('token'));
+    String apitoken = await prefs!.then((value) => value.getString('token')!);
 
     dynamic header = {'Authorization': 'Bearer $apitoken'};
     dynamic body = {

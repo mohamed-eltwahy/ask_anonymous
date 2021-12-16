@@ -1,11 +1,11 @@
 class User {
-  String token ;
-  int id ;
-  String name ;
-  String email ;
-  String image ;
-  String link ;
-  int active ;
+  String? token ;
+  int? id ;
+  String? name ;
+  String? email ;
+  String? image ;
+  String? link ;
+  int? active ;
 
   User(
       { this.token,
