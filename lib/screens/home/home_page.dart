@@ -82,35 +82,43 @@ class _HomePageState extends State<HomePage>
                     ),
                   ],
                 ),
-                if (_image != null)
-                  Container(
-                    height: 90,
-                    // width: 80,
-                    //     color: Colors.red,
-                    child: InkWell(
-                      onTap: () => pickImage(),
-                      child: CircleAvatar(
-                        backgroundImage: FileImage(
-                          _image!,
-                        ),
-                        maxRadius: 55,
-                        backgroundColor: Colors.transparent,
-                      ),
-                    ),
-                  )
-                else
-                  Container(
-                    height: 90,
-                    //width: 80,
-                    child: InkWell(
-                      onTap: () => pickImage(),
-                      child: CircleAvatar(
-                        radius: 55,
-                        backgroundImage: CachedNetworkImageProvider(
-                            widget.pref!.getString('image')!),
-                      ),
-                    ),
+                Container(
+                  height: 90,
+                  child: CircleAvatar(
+                    radius: 55,
+                    backgroundImage: CachedNetworkImageProvider(
+                        widget.pref!.getString('image')!),
                   ),
+                ),
+                // if (_image != null)
+                //   Container(
+                //     height: 90,
+                //     // width: 80,
+                //     //     color: Colors.red,
+                //     child: InkWell(
+                //       onTap: () => pickImage(),
+                //       child: CircleAvatar(
+                //         backgroundImage: FileImage(
+                //           _image!,
+                //         ),
+                //         maxRadius: 55,
+                //         backgroundColor: Colors.transparent,
+                //       ),
+                //     ),
+                //   )
+                // else
+                //   Container(
+                //     height: 90,
+                //     //width: 80,
+                //     child: InkWell(
+                //       onTap: () => pickImage(),
+                //       child: CircleAvatar(
+                //         radius: 55,
+                //         backgroundImage: CachedNetworkImageProvider(
+                //             widget.pref!.getString('image')!),
+                //       ),
+                //     ),
+                //   ),
                 Text(
                   name!,
                   style: TextStyle(color: Colors.black, fontSize: 16),
@@ -175,11 +183,10 @@ class _HomePageState extends State<HomePage>
               child: TabBarView(
                 controller: _tabController,
                 children: [
+                  MyQuestions(),
                   // first tab bar view widget
                   MyAnswers(),
-
                   // second tab bar view widget
-                  MyQuestions()
                 ],
               ),
             ),

@@ -7,4 +7,7 @@ class ApiLinks{
   static String newpass='/newpassword';
   static String updateuser='/update';
   static String logout='/logout';
+  static String myquestions='/get/message/send/me';
+  static String reply='/get/message/you';
+
 }
