@@ -3,6 +3,7 @@ import 'package:ask_anonymous/provider/authProvider/editprofile.dart';
 import 'package:ask_anonymous/provider/authProvider/logout.dart';
 import 'package:ask_anonymous/provider/authProvider/newpassProvider.dart';
 import 'package:ask_anonymous/provider/authProvider/register_loginProvider.dart';
+import 'package:ask_anonymous/provider/home_provider/ask_question.dart';
 import 'package:ask_anonymous/provider/home_provider/get_questions.dart';
 import 'package:ask_anonymous/provider/home_provider/get_replies.dart';
 import 'package:ask_anonymous/screens/splash/splash.dart';
@@ -46,8 +47,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => GetMyReplies(),
         ),
+          ChangeNotifierProvider(
+          create: (context) => AskQuestion(),
+        ),
         
-        //GetMyReplies
+        //              child: Consumer<AskQuestion>(
+
         ],
       child: GetMaterialApp(
         translations: Translation(),

@@ -9,5 +9,6 @@ class ApiLinks{
   static String logout='/logout';
   static String myquestions='/get/message/send/me';
   static String reply='/get/message/you';
+  static String ask='/sendmessage';
 
 }
